@@ -33,23 +33,15 @@ Grafana 的仪表盘市场：https://grafana.com/grafana/dashboards
 
 在你的浏览器中访问 `localhost:3000` 即可看到运行的 Grafana，再根据教程中的步骤设置好源即可
 
+`localhost:9090` 可看到运行的 Prometheus server UI
+
+`localhost:9100/metrics` 可看到收集到的指标
+
 教程Link: https://kalasearch.cn/blog/grafana-with-prometheus-tutorial/
 
 ## 下一步
 
+grafana book: https://yunlzheng.gitbook.io/prometheus-book/introduction
 
 - todo 
     - PromQL
-
-
-其它教程：
-
-[REST API 设计指南](https://kalasearch.cn/blog/rest-api-best-practices/)
-
-[ElasticSearch 终极教程 - 第一章](https://kalasearch.cn/blog/elasticsearch-tutorial/)
-
-[ElasticSearch 终极教程 - 第二章](https://kalasearch.cn/blog/chapter2-run-elastic-search-locally/)
-
-[ElasticSearch 终极教程 - 第三章](https://kalasearch.cn/blog/chapter3-elastic-search-and-lucene/)
-
-[NoSQL 数据库管理系统和模型比较](https://kalasearch.cn/community/tutorials/comparison-of-nosql-databases/)
