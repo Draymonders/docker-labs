@@ -1,0 +1,89 @@
+version: "3"
+
+services:
+  zookeeper:
+    image: wurstmeister/zookeeper
+    ports:
+      - 2181:2181
+  kafka:
+    depends_on:
+      - zookeeper
+    image: wurstmeister/kafka
+    ports:
+      - 9092:9092
+    environment:
+      # 这里填写自己的ip
+      KAFKA_ADVERTISED_HOST_NAME: ${HOST_IP}
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_CREATE_TOPICS: user-logs:5:1
+      KAFKA_LOG_RETENTION_HOURS: 24
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+
+  redis:
+    image: redis
+    restart: always
+    ports:
+      - 6379:6379
+
+  influxdb:
+    image: influxdb
+    restart: always
+    ports:
+      - 8086:8086
+      - 8082:8082
+      - 8089:8089
+  grafana:
+    image: grafana/grafana
+    restart: always
+    ports:
+      - 3000:3000
+    environment:
+      GF_AUTH_BASIC_ENABLED: "false"
+      GF_AUTH_ANONYMOUS_ENABLED: "true"
+      GF_AUTH_ANONYMOUS_ORG_ROLE: Admin
+      GF_SERVER_ROOT_URL: /
+
+  mongo:
+    image: mongo
+    restart: always
+    ports:
+      - 27017:27017
+  mongo-express:
+    depends_on:
+      - mongo
+    image: mongo-express
+    restart: always
+    ports:
+      - 8081:8081
+    network_mode: host
+    environment:
+      ME_CONFIG_MONGODB_SERVER: localhost
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.4.0
+    environment:
+      - discovery.type=single-node
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    volumes:
+      - ~/elasticsearch/data:/usr/share/elasticsearch/data
+    hostname: elasticsearch
+    restart: always
+    ports:
+      - 9200:9200
+      - 9300:9300
+  logstash:
+    image: docker.elastic.co/logstash/logstash:7.4.0
+    restart: always
+    volumes:
+      - ./logstash-local.conf:/usr/share/logstash/pipeline/logstash.conf:rw
+    depends_on:
+      - elasticsearch
+  kibana:
+    image: docker.elastic.co/kibana/kibana:7.4.0
+    hostname: kibana
+    depends_on:
+      - elasticsearch
+    restart: always
+    ports:
+      - 5601:5601
