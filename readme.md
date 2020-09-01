@@ -7,6 +7,7 @@
 ```python3
 - production   # 生产环境使用
 - grafana      # grafana数据监控
+- redis        # 单Redis使用
 ```
 
 
